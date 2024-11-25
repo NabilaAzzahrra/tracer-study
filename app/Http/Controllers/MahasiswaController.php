@@ -39,21 +39,51 @@ class MahasiswaController extends Controller
      */
     public function show(string $id)
     {
+        // $mataKuliah = $id;
+        // $original = strtoupper(str_replace('-', ' ', $mataKuliah));
+        // $detailMateri = DetailMateri::with(['pertemuan', 'pertemuan.matkul'])
+        //     ->whereHas('pertemuan.matkul', function ($query) use ($original) {
+        //         $query->where('MataKuliah', $original);
+        //     })
+        //     ->first();
+        // $kodeMataKuliah = $detailMateri->pertemuan->KodeMataKuliah;
+        // $kodePertemuan = $detailMateri->KodePertemuan;
+        // $data = DetailPertemuan::where('KodeMataKuliah', $kodeMataKuliah)->get();
+        // $materi = DB::table('detail_pertemuan')
+        //     ->join('detail_materi', 'detail_materi.KodePertemuan', '=', 'detail_pertemuan.KodePertemuan')
+        //     ->select('detail_pertemuan.*', 'detail_materi.*')
+        //     ->where('detail_pertemuan.KodePertemuan', $kodePertemuan)
+        //     ->get();
+        // return view('page.mahasiswa.index')->with([
+        //     'data' => $detailMateri,
+        //     'pertemuan' => $data,
+        //     'materi' => $materi,
+        // ]);
+    }
+
+    public function showMataKuliah(string $id)
+    {
         $mataKuliah = $id;
-        $original = strtoupper(str_replace('-', ' ', $mataKuliah));
-        $detailMateri = DetailMateri::with(['pertemuan', 'pertemuan.matkul'])
-            ->whereHas('pertemuan.matkul', function ($query) use ($original) {
-                $query->where('MataKuliah', $original);
-            })
-            ->first();
-        $kodeMataKuliah = $detailMateri->pertemuan->KodeMataKuliah;
-        $kodePertemuan = $detailMateri->KodePertemuan;
-        $data = DetailPertemuan::where('KodeMataKuliah', $kodeMataKuliah)->get();
-        $materi = DB::table('detail_pertemuan')
-            ->join('detail_materi', 'detail_materi.KodePertemuan', '=', 'detail_pertemuan.KodePertemuan')
-            ->select('detail_pertemuan.*', 'detail_materi.*')
-            ->where('detail_pertemuan.KodePertemuan', $kodePertemuan)
-            ->get();
+        if ($mataKuliah != null) {
+            $original = strtoupper(str_replace('-', ' ', $mataKuliah));
+            $detailMateri = DetailMateri::with(['pertemuan', 'pertemuan.matkul'])
+                ->whereHas('pertemuan.matkul', function ($query) use ($original) {
+                    $query->where('MataKuliah', $original);
+                })
+                ->first();
+            $kodeMataKuliah = $detailMateri->pertemuan->KodeMataKuliah;
+            $kodePertemuan = $detailMateri->KodePertemuan;
+            $data = DetailPertemuan::where('KodeMataKuliah', $kodeMataKuliah)->get();
+            $materi = DB::table('detail_pertemuan')
+                ->join('detail_materi', 'detail_materi.KodePertemuan', '=', 'detail_pertemuan.KodePertemuan')
+                ->select('detail_pertemuan.*', 'detail_materi.*')
+                ->where('detail_pertemuan.KodePertemuan', $kodePertemuan)
+                ->get();
+        } else {
+            $detailMateri = 0;
+            $data = 0;
+            $materi = 0;
+        }
         return view('page.mahasiswa.index')->with([
             'data' => $detailMateri,
             'pertemuan' => $data,

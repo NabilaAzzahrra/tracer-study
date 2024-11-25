@@ -95,7 +95,7 @@
                                                 {{ $d->JumlahPertemuan }}
                                             </td>
                                             <td class="px-6 py-4 bg-gray-100">
-                                                <a href="{{ route('mahasiswa.show', ['kodeMataKuliah' => Str::slug($d->MataKuliah)]) }}">
+                                                <a href="{{ route('mahasiswa.showMataKuliah', ['kodeMataKuliah' => Str::slug($d->MataKuliah)]) }}">
                                                     {{ $d->MataKuliah }}
                                                 </a>
                                             </td>

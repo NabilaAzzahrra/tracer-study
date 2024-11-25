@@ -26,7 +26,9 @@ Route::resource('mataKuliah', MataKuliahController::class)->middleware('auth');
 Route::resource('pertemuan', DetailPertemuanController::class)->middleware('auth');
 Route::resource('detailMateri', DetailMateriController::class)->middleware('auth');
 
-Route::get('/{kodeMataKuliah}', [MahasiswaController::class, 'show'])->name('mahasiswa.show');
+// Route::get('/{kodeMataKuliah}', [MahasiswaController::class, 'showMataKuliah'])->name('mahasiswa.showMataKuliah');
+Route::get('/materi/{kodeMataKuliah}', [MahasiswaController::class, 'showMataKuliah'])
+    ->name('mahasiswa.showMataKuliah');
 Route::get('/mahasiswa/edit/{KodeMateri}', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
 
 require __DIR__.'/auth.php';
