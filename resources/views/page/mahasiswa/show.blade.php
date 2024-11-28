@@ -71,7 +71,7 @@
                                 Pertemuan {{ $p->pertemuan }}
                             </a>
                             <ul class="dropdown-menu hidden pl-6 space-y-2">
-                                @foreach ($materi->where('KodePertemuan', $p->KodePertemuan) as $m)
+                                @foreach ($materi[$p->KodePertemuan] ?? [] as $m)
                                     <li>
                                         <a href="{{ route('mahasiswa.edit', $m->KodeMateri) }}"
                                             class="flex items-center p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
@@ -105,9 +105,7 @@
 
             <!-- Page Content -->
             <main>
-                <iframe src="{{ url('materi/' . $file->materi) }}"
-                    style="width: 100%; height: 100vh;"
-                    frameborder="0"
+                <iframe src="{{ url('materi/' . $file->materi) }}" style="width: 100%; height: 100vh;" frameborder="0"
                     allowfullscreen></iframe>
             </main>
         </div>

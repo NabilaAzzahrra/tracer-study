@@ -77,7 +77,7 @@ class MahasiswaController extends Controller
             $materi = DB::table('detail_pertemuan')
                 ->join('detail_materi', 'detail_materi.KodePertemuan', '=', 'detail_pertemuan.KodePertemuan')
                 ->select('detail_pertemuan.*', 'detail_materi.*')
-                ->where('detail_pertemuan.KodePertemuan', $kodePertemuan)
+                ->where('detail_pertemuan.KodeMataKuliah', $kodeMataKuliah)
                 ->get();
         } else {
             $detailMateri = 0;
@@ -110,9 +110,9 @@ class MahasiswaController extends Controller
 
         $materi = DB::table('detail_pertemuan')
             ->join('detail_materi', 'detail_materi.KodePertemuan', '=', 'detail_pertemuan.KodePertemuan')
-            ->select('detail_pertemuan.*', 'detail_materi.*')
-            ->where('detail_pertemuan.KodePertemuan', $kodePertemuan)
-            ->get();
+            ->select('detail_pertemuan.KodePertemuan', 'detail_materi.*')
+            ->get()
+            ->groupBy('KodePertemuan');
 
         $file = DB::table('detail_pertemuan')
             ->join('detail_materi', 'detail_materi.KodePertemuan', '=', 'detail_pertemuan.KodePertemuan')

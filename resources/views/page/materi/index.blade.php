@@ -75,7 +75,9 @@
                                             </td>
                                             <td class="px-6 py-4">
                                                 {{ $d->materi }}
-                                                <a href="{{ route('mataKuliah.show', $d->id) }}" class="bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded-xl text-xs text-white w-10 h-10 flex items-center justify-center"><i class="fi fi-ss-book-open-cover"></i></a>
+                                                <a href="{{ route('mataKuliah.show', $d->id) }}"
+                                                    class="bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded-xl text-xs text-white w-10 h-10 flex items-center justify-center"><i
+                                                        class="fi fi-ss-book-open-cover"></i></a>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <div class="flex gap-1">
@@ -87,7 +89,7 @@
                                                     </div>
                                                     <button
                                                         class="bg-red-400 p-3 w-10 h-10 rounded-xl text-white hover:bg-red-500"
-                                                        onclick="return dataDelete('{{ $d->id }}','{{ $d->judul }}')">
+                                                        onclick="return dataDelete('{{ $d->id }}', '{{ $d->judul }}')">
                                                         <i class="fi fi-sr-cross-circle"></i>
                                                     </button>
                                                 </div>
@@ -106,22 +108,25 @@
         </div>
     </div>
     <script>
-        const dataDelete = async (id, MataKuliah) => {
-            let tanya = confirm(`Apakah anda yakin untuk menghapus materi ${MataKuliah} ?`);
+        const dataDelete = async (id, judul) => {
+            let tanya = confirm(`Apakah Anda yakin untuk menghapus materi "${judul}"?`);
             if (tanya) {
-                await axios.post(`/detailMateri/${id}`, {
-                        '_method': 'DELETE',,
-                        '_token': $('meta[name="csrf-token"]').attr('content')
-                    })
-                    .then(function(response) {
-                        // Handle success
-                        location.reload();
-                    })
-                    .catch(function(error) {
-                        // Handle error
-                        alert('Error deleting record');
-                        console.log(error);
+                try {
+                    const response = await axios.post(`/detailMateri/${id}`, {
+                        '_method': 'DELETE',
+                        '_token': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
                     });
+
+                    if (response.status === 200) {
+                        alert('Data berhasil dihapus.');
+                        location.reload(); // Refresh halaman
+                    } else {
+                        alert('Gagal menghapus data. Silakan coba lagi.');
+                    }
+                } catch (error) {
+                    alert('Terjadi kesalahan saat menghapus data.');
+                    console.error(error);
+                }
             }
         }
     </script>
