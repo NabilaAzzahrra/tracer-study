@@ -7,7 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex gap-5">
+            <div class="flex flex-col lg:flex-row gap-5 p-4 lg:p-0">
                 <div class="w-full">
                     <div>
                         <div class="p-4 bg-amber-200 w-64 h-24 rounded-2xl shadow-lg">

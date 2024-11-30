@@ -7,13 +7,13 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="gap-5 items-start flex">
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg w-1/2 p-4">
+            <div class="gap-5 items-start flex flex-col lg:flex-row p-4 lg:p-0">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg lg:w-1/2 p-4 w-full">
                     <div class="p-4 bg-gray-100 mb-2 rounded-xl font-bold">
                         FORM INPUT MATA KULIAH
                     </div>
                     <div>
-                        <form class="max-w-sm mx-auto" method="POST" action="{{ route('mataKuliah.store') }}">
+                        <form class="w-full" method="POST" action="{{ route('mataKuliah.store') }}">
                             @csrf
                             <div class="mb-5">
                                 <label for="KodeMataKuliah"
@@ -45,7 +45,7 @@
                     </div>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg w-full p-4">
+                <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg w-full p-4 w-full">
                     <div class="p-4 bg-gray-100 mb-2 rounded-xl font-bold">
                         MATA KULIAH
                     </div>
