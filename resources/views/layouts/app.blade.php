@@ -26,10 +26,74 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: url('public/images/landing.jpg')
+        }
+
+        .bg-custom {
+            /* position: relative; */
+            z-index: 1;
+            /* color: white; */
+            /* Just to make content visible on the transparent background */
+        }
+
+        .bg-custom::before {
+            content: '';
+            background-image: url('{{ url('images/landing.jpg') }}');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.25;
+            /* Adjust the transparency here */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        /* Preloader Styles */
+        #preloader {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            background-color: #ffffff;
+            /* Background transparan 50% */
+        }
+
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-left-color: #000;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
 </head>
 
-<body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
+<body class="font-sans antialiased bg-[url('/public/images/landing.jpg')] bg-contain">
+    <div class="min-h-screen dark:bg-gray-900 bg-white bg-opacity-75">
         @include('layouts.navigation')
 
         <!-- Page Heading -->
