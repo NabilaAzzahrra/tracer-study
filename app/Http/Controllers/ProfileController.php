@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -16,8 +18,10 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        $admin = User::where('email', Auth::user()->email)->first();
         return view('profile.edit', [
             'user' => $request->user(),
+            'admin' => $admin
         ]);
     }
 
@@ -56,5 +60,19 @@ class ProfileController extends Controller
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function updatePass(Request $request, string $id)
+    {
+        // $id = $request->input('id_user');
+        $password = $request->input('newPassword');
+
+        $data = [
+            'password' => Hash::make($password),
+        ];
+
+        $datas = User::findOrFail($id);
+        $datas->update($data);
+        return back()->with('message_delete', 'Password Berhasil diubah');
     }
 }

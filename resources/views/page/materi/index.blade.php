@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Mata Kuliah') }}
+            {{ __('Pertemuan') }}
         </h2>
     </x-slot>
 
@@ -16,7 +16,7 @@
                             </div>
                             <div class="w-full text-right">
                                 <a href="{{ route('detailMateri.show', $dataKodePertemuan) }}"
-                                    class="mr-2 bg-green-500 hover:bg-green-600 pr-3 pl-4 py-3 rounded-xl text-xs text-white">
+                                    class="mr-2 bg-green-500 hover:bg-green-600 px-3 py-3 rounded-xl text-xs text-white">
                                     <i class="fi fi-sr-add"></i>
                                 </a>
                             </div>
@@ -37,16 +37,16 @@
                                         <th scope="col" class="px-6 py-3 bg-gray-100">
                                             KODE PERTEMUAN
                                         </th>
-                                        <th scope="col" class="px-6 py-3 bg-gray-100">
+                                        <th scope="col" class="px-6 py-3">
                                             PERTEMUAN
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="px-6 py-3 bg-gray-100">
                                             JUDUL
                                         </th>
-                                        <th scope="col" class="px-6 py-3 bg-gray-100">
+                                        <th scope="col" class="px-6 py-3">
                                             MATERI
                                         </th>
-                                        <th scope="col" class="px-6 py-3">
+                                        <th scope="col" class="px-6 py-3 bg-gray-100 text-center">
                                             ACTION
                                         </th>
                                     </tr>
@@ -70,23 +70,20 @@
                                             <td class="px-6 py-4">
                                                 {{ $d->pertemuan->pertemuan }}
                                             </td>
-                                            <td class="px-6 py-4">
+                                            <td class="px-6 py-4 bg-gray-100">
                                                 {{ $d->judul }}
                                             </td>
                                             <td class="px-6 py-4">
-                                                {{ $d->materi }}
                                                 <a href="{{ route('mataKuliah.show', $d->id) }}"
                                                     class="bg-emerald-500 hover:bg-emerald-600 px-3 py-1 rounded-xl text-xs text-white w-10 h-10 flex items-center justify-center"><i
                                                         class="fi fi-ss-book-open-cover"></i></a>
                                             </td>
-                                            <td class="px-6 py-4">
-                                                <div class="flex gap-1">
-                                                    <div class="w-full mt-2">
-                                                        <a href="{{ route('detailMateri.edit', $d->id) }}"
-                                                            class="mr-2 bg-green-500 hover:bg-green-600 pr-3 pl-4 py-3 rounded-xl text-xs text-white">
-                                                            <i class="fi fi-sr-pen-circle"></i>
-                                                        </a>
-                                                    </div>
+                                            <td class="px-6 py-4 bg-gray-100 text-center">
+                                                <div class="flex items-start">
+                                                    <a href="{{ route('detailMateri.edit', $d->id) }}"
+                                                        class="mr-2 bg-green-500 hover:bg-green-600 px-3 py-3 rounded-xl text-xs text-white">
+                                                        <i class="fi fi-sr-pen-circle"></i>
+                                                    </a>
                                                     <button
                                                         class="bg-red-400 p-3 w-10 h-10 rounded-xl text-white hover:bg-red-500"
                                                         onclick="return dataDelete('{{ $d->id }}', '{{ $d->judul }}')">

@@ -94,13 +94,14 @@
                                             <td class="px-6 py-4">
                                                 {{ $d->JumlahPertemuan }}
                                             </td>
-                                            <td class="px-6 py-4 bg-gray-100">
+                                            <td class="px-6 py-4 bg-gray-100 text-center">
                                                 <a href="{{ route('mahasiswa.showMataKuliah', ['kodeMataKuliah' => Str::slug($d->MataKuliah)]) }}">
-                                                    {{ $d->MataKuliah }}
+                                                    <i class="fi fi-br-link-horizontal"></i>
                                                 </a>
                                             </td>
                                             <td class="px-6 py-4">
-                                                <button type="button"
+                                                <div class="flex gap-2">
+                                                    <button type="button"
                                                     class="bg-amber-400 p-3 w-10 h-10 rounded-xl text-white hover:bg-amber-500"
                                                     onclick="editSourceModal(this)" data-modal-target="sourceModal"
                                                     data-id="{{ $d->id }}" data-kodematakuliah="{{ $d->KodeMataKuliah }}"
@@ -112,6 +113,7 @@
                                                     onclick="return dataDelete('{{ $d->id }}','{{ $d->MataKuliah }}')">
                                                     <i class="fi fi-sr-delete-document"></i>
                                                 </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     @endforeach

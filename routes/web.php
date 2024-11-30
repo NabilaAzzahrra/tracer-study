@@ -13,13 +13,19 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    $data = MataKuliah::paginate(5);
+    $dataMatkul = MataKuliah::all();
+    return view('dashboard')->with([
+        'data' => $data,
+        'dataMatkul' => $dataMatkul,
+    ]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::patch('/updatePass/{id}', [ProfileController::class, 'updatePass'])->name('profile.updatePass');
 });
 
 Route::resource('mataKuliah', MataKuliahController::class)->middleware('auth');
@@ -31,4 +37,4 @@ Route::get('/materi/{kodeMataKuliah}', [MahasiswaController::class, 'showMataKul
     ->name('mahasiswa.showMataKuliah');
 Route::get('/mahasiswa/edit/{KodeMateri}', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
