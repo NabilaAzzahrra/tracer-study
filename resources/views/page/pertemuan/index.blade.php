@@ -58,7 +58,7 @@
                                                 {{ $d->JumlahPertemuan }}
                                             </td>
                                             <td class="px-6 py-4 bg-gray-100">
-                                                <a href="{{ $d->link }}" target="_blank">Link</a>
+                                                <a href="http://127.0.0.1:8000/materi/{{ str_replace(' ', '-', strtolower($d->MataKuliah)) }}" target="_blank">Link</a>
                                             </td>
                                             <td class="px-6 py-4">
                                                 <a href="{{ route('pertemuan.show', $d->KodeMataKuliah) }}"

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $data->pertemuan->matkul->MataKuliah }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -51,6 +51,20 @@
         #sidebar.w-20 .dropdown-menu {
             padding-left: 0.5rem;
         }
+
+        #sidebar.w-20 .matkul {
+            display: none;
+            /* font-size: 12px;
+            text-wrap: wrap; */
+            /* Atau sembunyikan nama jika terlalu kecil */
+        }
+
+        #sidebar.w-20 .pertemuan {
+            display: none;
+            /* font-size: 12px;
+            text-wrap: wrap; */
+            /* Atau sembunyikan nama jika terlalu kecil */
+        }
     </style>
 </head>
 
@@ -59,8 +73,10 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-white dark:bg-gray-800 shadow-md" id="sidebar">
             <div class="p-4">
-                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                    {{ $data->pertemuan->matkul->MataKuliah }}</h2>
+                <h2 class="text-md font-semibold text-gray-700 dark:text-gray-200 bg-emerald-200 p-2 text-wrap">
+                    <i class="fi fi-ss-book-bookmark mr-4"></i> <span
+                        class="matkul">{{ $data->pertemuan->matkul->MataKuliah }}</span>
+                </h2>
                 <ul class="mt-4 space-y-2">
                     <!-- Dropdown Menu -->
                     @foreach ($pertemuan as $p)
@@ -68,14 +84,14 @@
                             <a href="#"
                                 class="flex items-center p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md dropdown-toggle">
                                 <i class="fi fi-sr-chalkboard-user mr-4 mt-1"></i>
-                                Pertemuan {{ $p->pertemuan }}
+                                <span class="pertemuan"> Pertemuan {{ $p->pertemuan }}</span>
                             </a>
                             <ul class="dropdown-menu hidden pl-6 space-y-2">
                                 @foreach ($materi->where('KodePertemuan', $p->KodePertemuan) as $m)
                                     <li>
                                         <a href="{{ route('mahasiswa.edit', $m->KodeMateri) }}"
                                             class="flex items-center p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
-                                            <i class="fi fi-sr-circle mr-4 mt-1"></i> {{ $m->judul }}
+                                            <i class="fi fi-sr-circle mr-4 mt-1"></i> <span class="pertemuan">{{ $m->judul }}</span>
                                         </a>
                                     </li>
                                 @endforeach
@@ -87,9 +103,8 @@
         </aside>
 
         <!-- Button to collapse sidebar -->
-        <button id="sidebar-toggle"
-            class="p-2 text-gray-700 bg-red-500 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <i class="fi fi-br-arrow-left-circle"></i>
+        <button id="sidebar-toggle" class="p-2 text-gray-700 dark:text-gray-300 flex items-start justify-start">
+            <i class="fi fi-br-menu-burger flex items-start justify-start"></i>
         </button>
 
         <!-- Main Content -->

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ $matkul->MataKuliah }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -33,7 +33,8 @@
         }
 
         #sidebar.w-20 {
-            width: 5rem;
+            width: 1rem;
+            display: none;
             /* Width when collapsed */
         }
 
@@ -51,6 +52,21 @@
         #sidebar.w-20 .dropdown-menu {
             padding-left: 0.5rem;
         }
+
+
+        #sidebar.w-20 .matkul {
+            display: none;
+            /* font-size: 12px;
+            text-wrap: wrap; */
+            /* Atau sembunyikan nama jika terlalu kecil */
+        }
+
+        #sidebar.w-20 .pertemuan {
+            display: none;
+            /* font-size: 12px;
+            text-wrap: wrap; */
+            /* Atau sembunyikan nama jika terlalu kecil */
+        }
     </style>
 </head>
 
@@ -59,8 +75,9 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-white dark:bg-gray-800 shadow-md" id="sidebar">
             <div class="p-4">
-                <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                    {{ $matkul->MataKuliah }}</h2>
+                <h2 class="text-lg font-semibold text-gray-700 bg-emerald-200 p-2 text-wrap dark:text-gray-200">
+                    <i class="fi fi-ss-book-bookmark mr-4"></i><span
+                        class="matkul">{{ $matkul->MataKuliah }}</span></h2>
                 <ul class="mt-4 space-y-2">
                     <!-- Dropdown Menu -->
                     @foreach ($pertemuan as $p)
@@ -68,14 +85,14 @@
                             <a href="#"
                                 class="flex items-center p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md dropdown-toggle">
                                 <i class="fi fi-sr-chalkboard-user mr-4 mt-1"></i>
-                                Pertemuan {{ $p->pertemuan }}
+                                <span class="pertemuan"> Pertemuan {{ $p->pertemuan }}</span>
                             </a>
                             <ul class="dropdown-menu hidden pl-6 space-y-2">
                                 @foreach ($materi[$p->KodePertemuan] ?? [] as $m)
                                     <li>
                                         <a href="{{ route('mahasiswa.edit', $m->KodeMateri) }}"
                                             class="flex items-center p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
-                                            <i class="fi fi-sr-circle mr-4 mt-1"></i> {{ $m->judul }}
+                                            <i class="fi fi-sr-circle mr-4 mt-1"></i> <span class="pertemuan">{{ $m->judul }}</span>
                                         </a>
                                     </li>
                                 @endforeach
@@ -88,8 +105,8 @@
 
         <!-- Button to collapse sidebar -->
         <button id="sidebar-toggle"
-            class="p-2 text-gray-700 bg-red-500 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700">
-            <i class="fi fi-br-arrow-left-circle"></i>
+            class="p-2 text-gray-700 dark:text-gray-300 flex items-start justify-start">
+            <i class="fi fi-br-menu-burger flex items-start justify-start"></i>
         </button>
 
         <!-- Main Content -->
@@ -104,14 +121,39 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
+            {{-- <main>
                 <iframe src="{{ url('materi/' . $file->materi) }}" style="width: 100%; height: 100vh;" frameborder="0"
                     allowfullscreen></iframe>
+            </main> --}}
+            <main>
+                <p id="fallbackMessage" style="display: none;">
+                    View the PDF file:
+                    <a href="{{ url('materi/' . $file->materi) }}" download>Download PDF</a>
+                </p>
+                <div id="pdfViewer" style="width: 100%; height: 100vh;"></div>
             </main>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.8/pdfobject.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const pdfUrl = "{{ url('materi/' . $file->materi) }}";
+
+            // Coba untuk embed PDF
+            const pdfSupported = PDFObject.supportsPDFs;
+
+            if (pdfSupported) {
+                // Jika browser mendukung PDF, tampilkan PDF dalam viewer
+                PDFObject.embed(pdfUrl, "#pdfViewer");
+                document.getElementById("pdfViewer").style.display = "block";
+            } else {
+                // Jika tidak mendukung PDF, tampilkan fallback link
+                document.getElementById("fallbackMessage").style.display = "block";
+            }
+        });
+    </script>
 
     <script>
         $(document).ready(function() {
