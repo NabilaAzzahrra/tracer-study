@@ -44,7 +44,7 @@
                             </div>
 
                             <div class="ms-1 ml-[15px]">
-                                <img src="{{ url('images/user.png') }}" alt="" srcset="" class="lg:w-8">
+                                <img src="{{ url('images/user.png') }}" alt="" srcset="" class="lg:w-8 md:w-10 w-8">
                             </div>
                         </button>
                     </x-slot>
