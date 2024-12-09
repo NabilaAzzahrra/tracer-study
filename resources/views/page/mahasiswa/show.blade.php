@@ -76,8 +76,8 @@
         <aside class="w-64 bg-white dark:bg-gray-800 shadow-md" id="sidebar">
             <div class="p-4">
                 <h2 class="text-lg font-semibold text-gray-700 bg-emerald-200 p-2 text-wrap dark:text-gray-200">
-                    <i class="fi fi-ss-book-bookmark mr-4"></i><span
-                        class="matkul">{{ $matkul->MataKuliah }}</span></h2>
+                    <i class="fi fi-ss-book-bookmark mr-4"></i><span class="matkul">{{ $matkul->MataKuliah }}</span>
+                </h2>
                 <ul class="mt-4 space-y-2">
                     <!-- Dropdown Menu -->
                     @foreach ($pertemuan as $p)
@@ -92,7 +92,8 @@
                                     <li>
                                         <a href="{{ route('mahasiswa.edit', $m->KodeMateri) }}"
                                             class="flex items-center p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-md">
-                                            <i class="fi fi-sr-circle mr-4 mt-1"></i> <span class="pertemuan">{{ $m->judul }}</span>
+                                            <i class="fi fi-sr-circle mr-4 mt-1"></i> <span
+                                                class="pertemuan">{{ $m->judul }}</span>
                                         </a>
                                     </li>
                                 @endforeach
@@ -104,8 +105,7 @@
         </aside>
 
         <!-- Button to collapse sidebar -->
-        <button id="sidebar-toggle"
-            class="p-2 text-gray-700 dark:text-gray-300 flex items-start justify-start">
+        <button id="sidebar-toggle" class="p-2 text-gray-700 dark:text-gray-300 flex items-start justify-start">
             <i class="fi fi-br-menu-burger flex items-start justify-start"></i>
         </button>
 
@@ -126,32 +126,62 @@
                     allowfullscreen></iframe>
             </main> --}}
             <main>
-                <p id="fallbackMessage" style="display: none;">
+                {{-- <p id="fallbackMessage" style="display: none;">
                     View the PDF file:
                     <a href="{{ url('materi/' . $file->materi) }}" download>Download PDF</a>
                 </p>
-                <div id="pdfViewer" style="width: 100%; height: 100vh;"></div>
+                <div id="pdfViewer" style="width: 100%; height: 100vh;"></div> --}}
+                <div id="pdfViewer">
+                    <p>Loading PDF...</p>
+                </div>
             </main>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfobject/2.2.8/pdfobject.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const pdfUrl = "{{ url('materi/' . $file->materi) }}";
+        // URL File PDF
+        const url = "{{ url('materi/' . $file->materi) }}";
 
-            // Coba untuk embed PDF
-            const pdfSupported = PDFObject.supportsPDFs;
+        // Konfigurasi PDF.js
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-            if (pdfSupported) {
-                // Jika browser mendukung PDF, tampilkan PDF dalam viewer
-                PDFObject.embed(pdfUrl, "#pdfViewer");
-                document.getElementById("pdfViewer").style.display = "block";
-            } else {
-                // Jika tidak mendukung PDF, tampilkan fallback link
-                document.getElementById("fallbackMessage").style.display = "block";
+        // Render PDF
+        const pdfViewer = document.getElementById('pdfViewer');
+
+        const renderPDF = async (url) => {
+            const pdf = await pdfjsLib.getDocument(url).promise;
+            pdfViewer.innerHTML = ''; // Bersihkan loading text
+
+            for (let i = 1; i <= pdf.numPages; i++) {
+                const page = await pdf.getPage(i);
+                const viewport = page.getViewport({
+                    scale: 1.5
+                });
+
+                // Buat Canvas untuk Halaman PDF
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+
+                // Render Halaman PDF ke Canvas
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+
+                pdfViewer.appendChild(canvas); // Tambahkan ke Viewer
             }
+        };
+
+        renderPDF(url).catch(err => {
+            console.error("PDF rendering error: ", err);
+            pdfViewer.innerHTML = `<p>Error loading PDF. <a href="${url}" download>Download PDF</a></p>`;
         });
     </script>
 
