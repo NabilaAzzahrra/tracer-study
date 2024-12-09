@@ -56,7 +56,7 @@
                 </a>
             </div>
             <div class="ml-4">
-                <a href="simatkul.nyalse.id/materi/kewirausahaan-(pjbl)">
+                <a href="/materi/kewirausahaan-(pjbl)">
                     <div
                         class="bg-blue-500 hover:bg-green-600 transition duration-500 text-white rounded-lg shadow-lg p-6 w-48 text-center">
                         <i class="fa fa-file text-4xl mb-4"></i>
