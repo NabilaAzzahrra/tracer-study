@@ -121,7 +121,7 @@
             @endisset
 
             <main>
-                <div id="pdfViewer">
+                <div id="pdfViewer" style="display: none;">
                     <p>Loading file...</p>
                 </div>
 
@@ -129,6 +129,11 @@
                     <source src="{{ url('materi/' . $file->materi) }}" type="video/mp4">
                     Your browser does not support the video tag. <a href="{{ url('materi/' . $file->materi) }}" download>Download Video</a>
                 </video>
+
+                <iframe id="desktopViewer" src="{{ url('materi/' . $file->materi) }}"
+                    style="width: 100%; height: 100vh; display: none;"
+                    frameborder="0"
+                    allowfullscreen></iframe>
 
             </main>
         </div>
@@ -141,57 +146,73 @@
     <script>
         const fileUrl = "{{ url('materi/' . $file->materi) }}";
 
-        // Cek ekstensi file
-        const fileExtension = fileUrl.split('.').pop().toLowerCase();
-
-        // Konfigurasi PDF.js
-        const pdfjsLib = window['pdfjs-dist/build/pdf'];
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+        // Deteksi perangkat
+        const isAndroid = /Android/i.test(navigator.userAgent);
 
         const pdfViewer = document.getElementById('pdfViewer');
         const videoPlayer = document.getElementById('videoPlayer');
+        const desktopViewer = document.getElementById('desktopViewer');
 
-        if (fileExtension === 'pdf') {
-            // Render PDF jika file adalah PDF
-            const renderPDF = async (url) => {
-                const pdf = await pdfjsLib.getDocument(url).promise;
-                pdfViewer.innerHTML = ''; // Bersihkan teks loading
+        if (isAndroid) {
+            // Tampilkan konfigurasi untuk perangkat Android
+            pdfViewer.style.display = 'block';
 
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const viewport = page.getViewport({
-                        scale: 1.5
-                    });
+            // Cek ekstensi file
+            const fileExtension = fileUrl.split('.').pop().toLowerCase();
 
-                    // Buat Canvas untuk Halaman PDF
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
+            // Konfigurasi PDF.js
+            const pdfjsLib = window['pdfjs-dist/build/pdf'];
+            pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
 
-                    // Render Halaman PDF ke Canvas
-                    await page.render({
-                        canvasContext: context,
-                        viewport: viewport
-                    }).promise;
+            if (fileExtension === 'pdf') {
+                console.log('satu');
 
-                    pdfViewer.appendChild(canvas); // Tambahkan ke Viewer
-                }
-            };
+                // Render PDF jika file adalah PDF
+                const renderPDF = async (url) => {
+                    const pdf = await pdfjsLib.getDocument(url).promise;
+                    pdfViewer.innerHTML = ''; // Bersihkan teks loading
 
-            renderPDF(fileUrl).catch(err => {
-                console.error("PDF rendering error: ", err);
-                pdfViewer.innerHTML = `<p>Error loading PDF. <a href="${fileUrl}" download>Download PDF</a></p>`;
-            });
-        } else if (fileExtension === 'mp4' || fileExtension === 'webm' || fileExtension === 'ogg') {
-            // Tampilkan video jika file adalah video
-            pdfViewer.style.display = 'none'; // Sembunyikan PDF Viewer
-            videoPlayer.style.display = 'block'; // Tampilkan Video Player
+                    for (let i = 1; i <= pdf.numPages; i++) {
+                        const page = await pdf.getPage(i);
+                        const viewport = page.getViewport({ scale: 1.5 });
+
+                        // Buat Canvas untuk Halaman PDF
+                        const canvas = document.createElement('canvas');
+                        const context = canvas.getContext('2d');
+                        canvas.height = viewport.height;
+                        canvas.width = viewport.width;
+
+                        // Render Halaman PDF ke Canvas
+                        await page.render({
+                            canvasContext: context,
+                            viewport: viewport
+                        }).promise;
+
+                        pdfViewer.appendChild(canvas); // Tambahkan ke Viewer
+                    }
+                };
+
+                renderPDF(fileUrl).catch(err => {
+                    console.error("PDF rendering error: ", err);
+                    pdfViewer.innerHTML = `<p>Error loading PDF. <a href="${fileUrl}" download>Download PDF</a></p>`;
+                });
+            } else if (fileExtension === 'mp4' || fileExtension === 'webm' || fileExtension === 'ogg') {
+                console.log('dua');
+                // Tampilkan video jika file adalah video
+                pdfViewer.style.display = 'none'; // Sembunyikan PDF Viewer
+                videoPlayer.style.display = 'block'; // Tampilkan Video Player
+            } else {
+                console.log('tiga');
+                // Jika bukan PDF atau video, tampilkan pesan error
+                pdfViewer.innerHTML = `<p>Unsupported file type. <a href="${fileUrl}" download>Download File</a></p>`;
+            }
         } else {
-            // Jika bukan PDF atau video, tampilkan pesan error
-            pdfViewer.innerHTML = `<p>Unsupported file type. <a href="${fileUrl}" download>Download File</a></p>`;
+            console.log('empat');
+            // Tampilkan iframe untuk perangkat desktop
+            desktopViewer.style.display = 'block';
         }
     </script>
+
     <script>
         $(document).ready(function() {
             // Toggle dropdown
